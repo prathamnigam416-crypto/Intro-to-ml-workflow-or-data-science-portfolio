@@ -1,0 +1,97 @@
+import pandas as pd
+import numpy as np
+
+# 1. SETUP: Create a raw dataset with common data issues
+data = {
+    'Age': [25, 30, np.nan, 35, 40],           # Contains Missing data (NaN)
+    'Salary': [50000, 60000, 55000, np.nan, 80000], # Needs normalization
+    'City': ['New York', 'Paris', 'New York', 'London', 'Paris'], # String values
+    'Purchased': ['Yes', 'No', 'Yes', 'No', 'Yes'] # Binary categorical text
+}
+
+df = pd.DataFrame(data)
+
+print("--- Step 0: Original Raw Data ---")
+print(df)
+print("\n")
+
+# --- STEP 1: Handling Missing Values (Imputation) ---
+# We use the mean (average) to fill gaps so we don't lose rows of data.
+
+df['Age'] = df['Age'].fillna(df['Age'].mean())
+df['Salary'] = df['Salary'].fillna(df['Salary'].mean())
+
+print("--- Step 1: Missing Data Fixed (Mean Imputation) ---")
+print(df)
+print("\n")
+
+# --- STEP 2: Feature Scaling (Min-Max Normalization) ---
+# Formula: (x - min) / (max - min). This scales data between 0 and 1.
+
+df['Salary_Normalized'] = (df['Salary'] - df['Salary'].min()) / (df['Salary'].max() - df['Salary'].min())
+
+print("--- Step 2: Salary Normalized (Range 0 to 1) ---")
+print(df[['Salary', 'Salary_Normalized']])
+print("\n")
+
+# --- STEP 3: Categorical Encoding (One-Hot Encoding) ---
+# Converts text like 'London' or 'Paris' into binary 0s and 1s for the ML model.
+
+df_final = pd.get_dummies(df, columns=['City', 'Purchased'], drop_first=True)
+
+print("--- Step 3: Final Prepared DataFrame ---")
+print(df_final)
+
+# --- OPTIONAL: Save the cleaned data ---
+# df_final.to_csv('cleaned_data.csv', index=False)
+
+Import pandas as pd
+import numpy as np
+
+# 1. SETUP: Create a sample dataset with common issues
+data = {
+    'Age': [25, 30, np.nan, 35, 40],           # Missing data (NaN)
+    'Salary': [50000, 60000, 55000, np.nan, 80000], # Needs normalization
+    'City': ['New York', 'Paris', 'New York', 'London', 'Paris'], # Categorical
+    'Purchased': ['Yes', 'No', 'Yes', 'No', 'Yes'] 
+}
+
+df = pd.DataFrame(data)
+
+# --- STEP 1: Fix Missing Data ---
+# We fill missing numerical values with the 'mean' (average) of that column
+df['Age'] = df['Age'].fillna(df['Age'].mean())
+df['Salary'] = df['Salary'].fillna(df['Salary'].mean())
+
+# --- STEP 2: Normalize Values (Min-Max Scaling) ---
+# This scales values to a range between 0 and 1 so large numbers don't bias the model
+df['Salary_Scaled'] = (df['Salary'] - df['Salary'].min()) / (df['Salary'].max() - df['Salary'].min())
+
+# --- STEP 3: Encode Categories ---
+# Convert text labels into binary (0 and 1) numbers using One-Hot Encoding
+df_final = pd.get_dummies(df, columns=['City', 'Purchased'], drop_first=True)
+
+print("--- Final Prepared Dataset ---")
+print(df_final.head())
+
+Final output
+--- Final Prepared Dataset ---
+    Age   Salary  Salary_Scaled  City_New York  City_Paris  Purchased_Yes
+0  25.0  50000.0       0.000000              1           0              1
+1  30.0  60000.0       0.333333              0           1              0
+2  32.5  55000.0       0.166667              1           0              1
+3  35.0  61250.0       0.375000              0           0              0
+4  40.0  80000.0       1.000000              0           1              1
+
+Breakdown of the Results
+​Here is exactly how those numbers were generated:
+​Imputation (Filling Blanks)
+​Row 2 (Age): Was NaN. Filled with 32.5 (Average of 25, 30, 35, 40).
+​Row 3 (Salary): Was NaN. Filled with 61,250 (Average of 50k, 60k, 55k, 80k).
+​Normalization (0 to 1 Scale)
+​Row 0: Salary was 50,000 (the minimum). Scaled value is 0.0.
+​Row 4: Salary was 80,000 (the maximum). Scaled value is 1.0.
+​Row 3: The imputed mean (61,250) becomes 0.375.
+​One-Hot Encoding (Columns)
+​City: The column "City" was removed and replaced by City_New York and City_Paris.
+​London is the "hidden" baseline (where both New York and Paris are 0).

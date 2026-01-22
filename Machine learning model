@@ -1,0 +1,40 @@
+import pandas as pd
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+# 1. Load Dataset
+data = load_iris()
+X = data.data
+y = data.target
+
+# 2. Split Data (80% training, 20% testing)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# 3. Build Model
+model = RandomForestClassifier(random_state=42)
+model.fit(X_train, y_train)
+
+# 4. Make Predictions
+y_pred = model.predict(X_test)
+
+# 5. Check Quality
+accuracy = accuracy_score(y_test, y_pred)
+conf_matrix = confusion_matrix(y_test, y_pred)
+
+print(f"Accuracy: {accuracy:.2f}")
+print("Confusion Matrix:")
+print(conf_matrix)
+
+Answer
+This code successfully implements a Random Forest Classification model on the Iris dataset. Since your script ends with a printed confusion matrix, it's helpful to understand exactly what those numbers represent and how to interpret the model's performance.
+​Breakdown of Your Code
+​Loading Data: You are using the Iris dataset, which contains 150 samples of flowers with 4 features (sepal length/width, petal length/width) and 3 target classes (Setosa, Versicolor, and Virginica).
+​Splitting: By using test_size=0.2, you've reserved 30 samples to test how the model performs on data it hasn't seen before.
+​Model Training: RandomForestClassifier is an ensemble method that creates multiple decision trees and merges them together to get a more accurate and stable prediction.
+​Evaluation:
+​Accuracy: A value of 1.00 (100%) or close to it is common for this specific dataset because it is very clean.
+​Confusion Matrix: This 3 \times 3 grid shows you exactly which classes were predicted correctly versus which were misclassified.
+
+O

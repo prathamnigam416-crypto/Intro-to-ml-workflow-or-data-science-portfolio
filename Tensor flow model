@@ -1,0 +1,24 @@
+class DigitRecognitionModel(tf.keras.Model):
+    def _init_(self):
+        super()._init_()
+        self.flatten = tf.keras.layers.Flatten()
+        self.dense1 = tf.keras.layers.Dense(128, activation='relu')
+        self.dropout = tf.keras.layers.Dropout(0.2)
+        self.output_layer = tf.keras.layers.Dense(10, activation='softmax')
+
+    def call(self, inputs, training=False):
+        x = self.flatten(inputs)
+        x = self.dense1(x)
+        x = self.dropout(x, training=training)
+        return self.output_layer(x)
+
+Answer
+This code defines a custom neural network model for digit recognition using TensorFlow Keras model subclassing.
+DigitRecognitionModel extends tf.keras.Model
+_init_() defines the layers:
+Flatten converts 28×28 images into a 1D vector
+Dense(128, relu) learns features
+Dropout(0.2) reduces overfitting during training
+Dense(10, softmax) outputs probabilities for digits 0–9
+call() defines the forward pass
+training=False ensures dropout is applied only during training

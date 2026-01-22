@@ -1,0 +1,41 @@
+Import numpy as np
+from sklearn.datasets import fetch_california_housing
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+
+# 1. Load Dataset
+data = fetch_california_housing()
+X = data.data
+y = data.target
+
+# 2. Split Data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# 3. Build Model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# 4. Make Predictions
+y_pred = model.predict(X_test)
+
+# 5. Check Quality (RMSE)
+mse = mean_squared_error(y_test, y_pred)
+rmse = np.sqrt(mse)
+print(f"Root Mean Squared Error (RMSE): {rmse:.2f}")
+
+What this code is doing
+​To help you understand the flow of your machine learning pipeline, here is a breakdown of each step:
+​Data Loading: You are using the California Housing dataset, which contains features like median income,
+house age, and average rooms to predict the median house value in California districts.
+​The Split: By using test_size=0.2, you are setting aside 20% of the data to test the model's accuracy on "unseen" information. 
+This prevents the model from just memorizing the answers (overfitting).
+​The Model: LinearRegression() finds the "line of best fit" by minimizing the sum of the squares of the vertical deviations between each data point and the line.
+​The Metric (RMSE): RMSE tells you, on average, how far off the model's predictions are from the actual values.
+Since the target variable y is measured in units of 100,000, an RMSE of 0.75 means the average error is approximately $75,000.
+
+How to improve these results
+​If you want to try and lower that RMSE (make the model more accurate), you could try these next steps:
+​Feature Scaling: Linear models often perform better when data is normalized using StandardScaler from sklearn.preprocessing.
+​Try a Different Model: Linear Regression is a "simple" model. You might get better results with a Random Forest or Gradient Boosting regressor.
+​Cross-Validation: Instead of a single split, use cross_val_score to see how the model performs across different subsets of the data.
